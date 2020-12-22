@@ -1,0 +1,45 @@
+{
+  "services": [
+    {
+      "kind": "Timer",
+      "config": { "id": "timer1", "everySeconds": "5" }
+    }
+  ],
+  "workers": [
+    {
+      "kind": "Id",
+      "config": { "id": "id1" }
+    },
+    {
+      "kind": "TimeStamp",
+      "config": { "id": "ts1", "field": "start" }
+    },
+    {
+      "kind": "TimeStamp",
+      "config": { "id": "ts2", "field": "end" }
+    },
+    {
+      "kind": "Counter",
+      "config": { "id": "counter1", "field": "ticks" }
+    },
+    {
+      "kind": "Copy",
+      "config": { "id": "copy1", "source": "input", "dest": "output" }
+    },
+    {
+      "kind": "ConsoleLogger",
+      "config": { "id": "cl1" }
+    },
+    {
+      "kind": "ConsoleLogger",
+      "config": { "id": "cl2" }
+    }
+  ],
+  "events": [
+    {
+      "name": "timer",
+      "sender": "timer1",
+      "listeners": [ "ts1", "id1", "cl1", "counter1", "copy1", "ts2", "cl2" ]
+    }
+  ]
+}

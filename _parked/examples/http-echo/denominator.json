@@ -1,0 +1,58 @@
+{
+  "demons": [
+    {
+      "kind": "Http",
+      "config": {
+        "id": "http1",
+        "port": "12345"
+      }
+    }
+  ],
+  "ops": [
+    {
+      "kind": "Ts",
+      "config": {
+        "id": "ts1",
+        "field": "start"
+      }
+    },
+    {
+      "kind": "JsonParser",
+      "config": {
+        "id": "jsonparser1"
+      }
+    },
+    {
+      "kind": "Id",
+      "config": {
+        "id": "id1"
+      }
+    },
+    {
+      "kind": "Echo",
+      "config": {
+        "id": "echo1"
+      }
+    },
+    {
+      "kind": "Ts",
+      "config": {
+        "id": "ts2",
+        "field": "end"
+      }
+    },
+    {
+      "kind": "Console",
+      "config": {
+        "id": "consoleoutput1"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "http",
+      "sender": "http1",
+      "pipeline": [ "httpinput1", "ts1", "id1", "jsonparser1", "echo1", "ts2", "httpoutput1" ]
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+export * as signalLib from 'https://deno.land/std/signal/mod.ts';
