@@ -38,6 +38,8 @@ export class WorkerFactory extends BaseFactory<IWorker> implements IWorkerFactor
     workers.consolelogger.register(this);
     workers.copy.register(this);
     workers.counter.register(this);
+    workers.parallelflow.register(this);
+    workers.serialflow.register(this);
     workers.id.register(this);
     workers.timestamp.register(this);
   }

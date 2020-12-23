@@ -2,6 +2,9 @@ import { Denominator } from '../../Denominator.ts';
 import { ICtx, IWorker, IWorkerConfig, IWorkerInfo, IEventSender } from '../../types.ts';
 import { IWorkerFactory, WorkerMaker } from '../../factories.ts';
 
+const ERR_NO_CONFIG = 'TimeStamp worker has no config';
+const ERR_NO_CONFIG_FIELD = 'TimeStamp worker config has no field';
+
 export interface TimeStampConfig extends IWorkerConfig {
   field: string;
 }
@@ -22,25 +25,17 @@ export class TimeStamp implements IWorker<TimeStampConfig> {
   }
 
   async init(): Promise<void> {
-    console.log('TimeStamp.init() config', this.config);
-    if (!this.config) throw new Error('TimeStamp worker has no config');
-    this.field = this.config.field;
-    if (this.field) {
-      // ok
-    } else {
-      throw new Error('TimeStamp worker has no field');
-    }
+    if (!this.config) throw new Error(ERR_NO_CONFIG);
+    this.field = this.config.field.trim();
+    if (this.field === '') throw new Error(ERR_NO_CONFIG_FIELD);
   }
 
-  async run(ctx: ICtx): Promise<Boolean> {
-    console.log('TimeStamp.run() config', this.config);
-    if (!this.field) throw new Error('TimeStamp worker has no field');
+  async run(ctx: ICtx): Promise<void> {
     ctx[this.field] = new Date();
-    return true;
   }
 
   async deinit(): Promise<void> {
-    console.log('TimeStamp.deinit() config', this.config);
+    
   }
 
 }

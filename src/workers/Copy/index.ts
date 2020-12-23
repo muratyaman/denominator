@@ -31,14 +31,12 @@ export class Copy implements IWorker<CopyConfig> {
     this.dest = this.config.dest;
   }
 
-  async run(ctx: ICtx): Promise<Boolean> {
+  async run(ctx: ICtx): Promise<void> {
     ctx[this.dest] = ctx[this.source];
-    return true;
   }
 
   async deinit(): Promise<void> {
-    this.d = null;
-    this.config = null;
+    
   }
 
 }

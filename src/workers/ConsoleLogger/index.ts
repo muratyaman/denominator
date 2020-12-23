@@ -20,17 +20,15 @@ export class ConsoleLogger implements IWorker<ConsoleLoggerConfig> {
   }
 
   async init(): Promise<void> {
-    //console.debug('ConsoleLogger.init() config', this.config);
+    
   }
 
-  async run(ctx: ICtx): Promise<Boolean> {
-    //console.debug('ConsoleLogger.run() config', this.config);
+  async run(ctx: ICtx): Promise<void> {
     console.log(ctx);
-    return true;
   }
 
   async deinit(): Promise<void> {
-    console.debug('ConsoleLogger.deinit() config', this.config);
+    
   }
 
 }

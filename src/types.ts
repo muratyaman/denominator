@@ -10,26 +10,40 @@ export interface ICommonConfig extends IJsonObject {
   id: string;
 }
 
+export type EventNameType = string;
+
+export type ServiceIdType = string;
+export type ServiceIdListType = ServiceIdListType[];
+export type ServicesType = Record<ServiceIdType, IDenominatorConfigService>;
+
+export type WorkerIdType = string;
+export type WorkerIdListType = WorkerIdType[];
+export type WorkersType = Record<WorkerIdType, IDenominatorConfigWorker>;
+
+export type ListenerIdType = string;
+export type ListenerIdListType = string[];
+
+export type FlowIdType = string;
+export type FlowIdListType = FlowIdType[];
+export type FlowsType = Record<FlowIdType, ListenerIdListType>;
+
 export interface IDenominatorConfig {
-  services: Array<IDenominatorConfigService>;
-  workers: Array<IDenominatorConfigService>;
-  events: Array<IDenominatorConfigEvent>;
+  services: ServicesType;
+  workers: WorkersType;
+  flows: FlowsType;
 }
+
+export type EventFlowsType = Record<EventNameType, FlowIdListType>;
 
 export interface IDenominatorConfigService {
   kind: string;
   config: IServiceConfig;
+  events: EventFlowsType;
 }
 
 export interface IDenominatorConfigWorker {
   kind: string;
   config: IWorkerConfig;
-}
-
-export interface IDenominatorConfigEvent {
-  name: string;
-  sender: string;
-  listeners: Array<string>;
 }
 
 export interface ICtx {
@@ -75,25 +89,27 @@ export interface IWorker<
   TConfig extends IWorkerConfig = IWorkerConfig,
   TInfo extends IWorkerInfo = IWorkerInfo
 > extends IComponent<TConfig, TInfo> {
-  run(ctx: ICtx): Promise<Boolean>;
+  run(ctx: ICtx): Promise<void>;
 }
 
 export interface IEventListener {
-  onEvent(name: string, ctx: ICtx, sender: IEventSender): Promise<Boolean>;
+  onEvent(name: string, ctx: ICtx, sender: IEventSender): Promise<void>;
 }
 
 export class WorkerEventListenerProxy implements IEventListener {
   constructor(public worker: IWorker, public senderIdFilter: RegExp = /.*/) {
-    // ok
+    // do nothing
   }
-  async onEvent(name: string, ctx: ICtx, sender: IEventSender): Promise<Boolean> {
-    if (this.worker && this.senderIdFilter.test(sender.id)) {
-      return this.worker.run(ctx);
+  async onEvent(name: string, ctx: ICtx, sender: IEventSender): Promise<void> {
+    if (this.senderIdFilter.test(sender.id)) {
+      await this.worker.run(ctx);
     }
-    return true;
   }
 }
 
 export interface IEventListeners {
   [eventName: string]: IEventListener[];
 }
+
+// a worker can throw this special error to interrupt event handling flow
+export class ErrCancelEvent extends Error {}

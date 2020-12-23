@@ -2,6 +2,8 @@ import { Denominator } from '../../Denominator.ts';
 import { ICtx, IWorker, IWorkerConfig, IWorkerInfo } from '../../types.ts';
 import { IWorkerFactory, WorkerMaker } from '../../factories.ts';
 
+const ERR_NO_CONFIG = 'Counter worker has no config';
+
 export interface CounterConfig extends IWorkerConfig {
   field: string;
 }
@@ -23,22 +25,18 @@ export class Counter implements IWorker<CounterConfig> {
   }
 
   async init(): Promise<void> {
-    if (!this.config) {
-      throw new Error('Counter worker has no config');
-    }
+    if (!this.config) throw new Error(ERR_NO_CONFIG);
     this.c = 0;
     this.field = this.config.field;
   }
 
-  async run(ctx: ICtx): Promise<Boolean> {
+  async run(ctx: ICtx): Promise<void> {
     this.c += 1;
     ctx[this.field] = this.c;
-    return true;
   }
 
   async deinit(): Promise<void> {
-    this.d = null;
-    this.config = null;
+    
   }
 
 }

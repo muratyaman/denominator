@@ -1,45 +1,68 @@
 {
-  "services": [
-    {
+  "services": {
+    "timer_1": {
       "kind": "Timer",
-      "config": { "id": "timer1", "everySeconds": "5" }
+      "config": { "id": "timer_1", "everySeconds": "5" },
+      "events": { "Timer_tick": [ "flow_1" ] }
     }
-  ],
-  "workers": [
-    {
+  },
+  "workers": {
+    "ts_1a": {
+      "kind": "TimeStamp",
+      "config": { "field": "start" }
+    },
+    "consolelogger_1a": {
+      "kind": "ConsoleLogger",
+      "config": {}
+    },
+    "id_1": {
       "kind": "Id",
-      "config": { "id": "id1" }
+      "config": {}
     },
-    {
-      "kind": "TimeStamp",
-      "config": { "id": "ts1", "field": "start" }
-    },
-    {
-      "kind": "TimeStamp",
-      "config": { "id": "ts2", "field": "end" }
-    },
-    {
+    "counter_1": {
       "kind": "Counter",
-      "config": { "id": "counter1", "field": "ticks" }
+      "config": { "field": "ticks" }
     },
-    {
+    "copy_1": {
       "kind": "Copy",
-      "config": { "id": "copy1", "source": "input", "dest": "output" }
+      "config": { "source": "input", "dest": "output" }
     },
-    {
-      "kind": "ConsoleLogger",
-      "config": { "id": "cl1" }
+    "ts_1b": {
+      "kind": "TimeStamp",
+      "config": { "field": "end" }
     },
-    {
+    "consolelogger_1b": {
       "kind": "ConsoleLogger",
-      "config": { "id": "cl2" }
+      "config": {}
+    },
+    "serialflow_1for2": {
+      "kind": "SerialFlow",
+      "config": { "flows": [ "flow_2" ] }
+    },
+    "ts_2": {
+      "kind": "TimeStamp",
+      "config": { "field": "flow2" }
+    },
+    "consolelogger_2": {
+      "kind": "ConsoleLogger",
+      "config": {}
+    },
+    "parallelflow_2for3": {
+      "kind": "ParallelFlow",
+      "config": { "flows": [ "flow_3" ] }
+    },
+    "ts_3": {
+      "kind": "TimeStamp",
+      "config": { "field": "flow3" }
+    },
+    "consolelogger_3": {
+      "kind": "ConsoleLogger",
+      "config": {}
     }
-  ],
-  "events": [
-    {
-      "name": "timer",
-      "sender": "timer1",
-      "listeners": [ "ts1", "id1", "cl1", "counter1", "copy1", "ts2", "cl2" ]
-    }
-  ]
+  },
+  "flows": {
+    "flow_1": [ "ts_1a", "consolelogger_1a", "id_1", "counter_1", "copy_1", "serialflow_1for2", "ts_1b", "consolelogger_1b" ],
+    "flow_2": [ "ts_2", "parallelflow_2for3", "consolelogger_2" ],
+    "flow_3": [ "ts_3", "consolelogger_3" ]
+  }
 }

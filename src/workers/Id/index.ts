@@ -24,9 +24,8 @@ export class Id implements IWorker<IdConfig> {
     
   }
 
-  async run(ctx: ICtx): Promise<Boolean> {
+  async run(ctx: ICtx): Promise<void> {
     ctx['id'] = uuid.generate();
-    return true;
   }
 
   async deinit() {
